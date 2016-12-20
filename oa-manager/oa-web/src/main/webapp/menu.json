@@ -1,0 +1,23 @@
+[
+	{
+        "id": 1,
+        "text": "Base",
+        "code": "10",
+        "iconCls": "icon-unknow",
+        "children": [
+            { "id": 101, "text": "遮罩层", "code": "1001", "iconCls": "icon-unknow" },
+            { "id": 103, "text": "判定组件", "code": "1003", "iconCls": "icon-unknow" },
+            { "id": 104, "text": "提示框", "code": "1004", "iconCls": "icon-unknow" },
+            { "id": 105, "text": "当前位置", "code": "1005", "iconCls": "icon-unknow" }
+        ]
+    },
+    {
+        "id": 2,
+        "text": "ProgressBar",
+        "code": "20",
+        "iconCls": "icon-unknow",
+        "children": [
+            { "id": 201, "text": "设置文本", "code": "2001", "iconCls": "icon-unknow" }
+        ]
+    }
+]

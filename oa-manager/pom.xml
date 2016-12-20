@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.shupro</groupId>
+		<artifactId>pro-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>com.shupro.oa</groupId>
+	<artifactId>oa-manager</artifactId>
+	<!-- <version>0.0.1-SNAPSHOT</version> -->
+	<packaging>pom</packaging>
+	
+	<modules>
+		<module>oa-web</module>
+		<module>oa-serve</module>
+		<module>oa-admin</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<oa.version>0.0.1-SNAPSHOT</oa.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.shupro.oa</groupId>
+				<artifactId>oa-admin</artifactId>
+				<version>${oa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.shupro.oa</groupId>
+				<artifactId>oa-serve</artifactId>
+				<version>${oa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.shupro.oa</groupId>
+				<artifactId>oa-web</artifactId>
+				<version>${oa.version}</version>
+			</dependency>
+			
+			<!-- 这里显示覆盖父级，然后没带版本，那么子级使用时会出现未定义版本的问题，所以不覆盖
+			<dependency>
+				<groupId>com.shupro</groupId>
+				<artifactId>shu-core</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+			</dependency>
+			 -->
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<!-- 添加tomcat插件，不用在本地安装tomcat了 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<path>/</path><!-- 项目名 -->
+					<port>80</port>
+					<uriEncoding>UTF-8</uriEncoding>
+					<url>http://localhost:80/manager/html</url>
+					<server>tomcat7</server>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

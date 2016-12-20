@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shupro.oa.admin.dao.SysDeptMapper" >
+  	<resultMap id="BaseResultMap" type="com.shupro.oa.admin.model.SysDept" >
+		<id column="id" property="id"/>
+		<result column="deptid" property="deptid"/>
+		<result column="name" property="name"/>
+		<result column="pid" property="pid"/>
+		<result column="levels" property="levels"/>
+		<result column="createtime" property="createtime"/>
+		<result column="description" property="description"/>
+		<result column="sotid" property="sotid"/>
+		<result column="state" property="state"/>
+		<result column="isenable" property="isenable"/>
+		<result column="type" property="type"/>
+	</resultMap>
+       
+	<sql id="Base_Column_List" >
+		 id,deptid,name,pid,levels,createtime,description,sotid,state,isenable,type
+	</sql>
+   
+	<!-- 动态分页查询条件 -->
+	<sql id="Page_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="deptid != null and deptid != '' ">
+		    and deptid = #{deptid}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="pid != null and pid != '' ">
+		    and pid = #{pid}
+		</if>
+		<if test="levels != null and levels != '' ">
+		    and levels = #{levels}
+		</if>
+		<if test="createtime != null and createtime != '' ">
+		    and createtime = #{createtime}
+		</if>
+		<if test="description != null and description != '' ">
+		    and description = #{description}
+		</if>
+		<if test="sotid != null and sotid != '' ">
+		    and sotid = #{sotid}
+		</if>
+		<if test="state != null and state != '' ">
+		    and state = #{state}
+		</if>
+		<if test="isenable != null and isenable != '' ">
+		    and isenable = #{isenable}
+		</if>
+		<if test="type != null and type != '' ">
+		    and type = #{type}
+		</if>
+	
+	</trim>
+	</sql>
+	
+	<!-- 动态条件查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="deptid != null and deptid != '' ">
+		    and deptid = #{deptid}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="pid != null and pid != '' ">
+		    and pid = #{pid}
+		</if>
+		<if test="levels != null and levels != '' ">
+		    and levels = #{levels}
+		</if>
+		<if test="createtime != null and createtime != '' ">
+		    and createtime = #{createtime}
+		</if>
+		<if test="description != null and description != '' ">
+		    and description = #{description}
+		</if>
+		<if test="sotid != null and sotid != '' ">
+		    and sotid = #{sotid}
+		</if>
+		<if test="state != null and state != '' ">
+		    and state = #{state}
+		</if>
+		<if test="isenable != null and isenable != '' ">
+		    and isenable = #{isenable}
+		</if>
+		<if test="type != null and type != '' ">
+		    and type = #{type}
+		</if>
+	
+	</trim>
+	</sql>
+ 
+	<!-- 根据id查询  -->
+	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List" /> 
+		from sys_dept
+		where id = #{id}
+	</select>
+
+	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
+	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dept
+		<include refid="Page_Where_Clause"/>
+	</select>
+
+	<!-- 条件查询所有 -->
+	<select id="selectAllByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dept
+		<include refid="Example_Where_Clause"/>
+	</select>
+   
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysDept" >
+	  	insert into sys_dept(id,deptid,name,pid,levels,createtime,description,sotid,state,isenable,type)
+		 values(#{id},#{deptid},#{name},#{pid},#{levels},#{createtime},#{description},#{sotid},#{state},#{isenable},#{type})
+	</insert>
+
+	<!-- 根据id，修改state(逻辑删除)-->  
+	 <update id="updateStateByIds" parameterType="java.lang.Integer" >
+	  	update sys_dept set isenable='0' where id in
+	  	<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	 </update>
+	 
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="com.shupro.oa.admin.model.SysDept" >
+	  	update sys_dept set deptid=#{deptid},name=#{name},pid=#{pid},levels=#{levels},description=#{description},sotid=#{sotid},state=#{state},isenable=#{isenable},type=#{type}
+		where id=#{id}
+	 </update>
+ 
+	 <!-- 动态修改记录，只修改只不为空的字段 -->
+	<update id="updateSelective" parameterType="com.shupro.oa.admin.model.SysDept" >
+		update sys_dept set 
+		<trim  suffixOverrides="," >
+			<if test="deptid != null and deptid != '' ">
+				deptid=#{deptid},
+			</if>
+			<if test="name != null and name != '' ">
+				name=#{name},
+			</if>
+			<if test="pid != null and pid != '' ">
+				pid=#{pid},
+			</if>
+			<if test="levels != null and levels != '' ">
+				levels=#{levels},
+			</if>
+			<if test="createtime != null  ">
+				createtime=#{createtime},
+			</if>
+			<if test="description != null and description != '' ">
+				description=#{description},
+			</if>
+			<if test="sotid != null  ">
+				sotid=#{sotid},
+			</if>
+			<if test="state != null and state != '' ">
+				state=#{state},
+			</if>
+			<if test="isenable != null and isenable != '' ">
+				isenable=#{isenable},
+			</if>
+			<if test="type != null and type != '' ">
+				type=#{type},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="deleteById" parameterType="com.shupro.oa.admin.model.SysDept" >
+		delete from sys_dept where id = #{id}
+	</delete>
+  	  	  	  	  	  	
+	<!-- 批量删除记录 -->
+	<delete id="deleteByIds" parameterType="java.lang.Integer" >
+		delete from sys_dept where id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	</delete>
+	
+</mapper>

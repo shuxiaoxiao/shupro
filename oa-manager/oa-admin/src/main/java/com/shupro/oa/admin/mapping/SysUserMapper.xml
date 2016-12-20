@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shupro.oa.admin.dao.SysUserMapper" >
+  	<resultMap id="BaseResultMap" type="com.shupro.oa.admin.model.SysUser" >
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="loginname" property="loginname"/>
+		<result column="pwd" property="pwd"/>
+		<result column="sex" property="sex"/>
+		<result column="icon" property="icon"/>
+		<result column="phoneNum" property="phoneNum"/>
+		<result column="phoneNum2" property="phoneNum2"/>
+		<result column="address" property="address"/>
+		<result column="state" property="state"/>
+		<result column="deptid" property="deptid"/>
+		<result column="createtime" property="createtime"/>
+		<result column="leavetime" property="leavetime"/>
+		<result column="userType" property="userType"/>
+		<result column="sotid" property="sotid"/>
+	</resultMap>
+       
+	<sql id="Base_Column_List" >
+		 id,name,loginname,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid
+	</sql>
+   
+	<!-- 动态分页查询条件 -->
+	<sql id="Page_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="loginname != null and loginname != '' ">
+		    and loginname = #{loginname}
+		</if>
+		<if test="pwd != null and pwd != '' ">
+		    and pwd = #{pwd}
+		</if>
+		<if test="sex != null and sex != '' ">
+		    and sex = #{sex}
+		</if>
+		<if test="icon != null and icon != '' ">
+		    and icon = #{icon}
+		</if>
+		<if test="phoneNum != null and phoneNum != '' ">
+		    and phoneNum = #{phoneNum}
+		</if>
+		<if test="phoneNum2 != null and phoneNum2 != '' ">
+		    and phoneNum2 = #{phoneNum2}
+		</if>
+		<if test="address != null and address != '' ">
+		    and address = #{address}
+		</if>
+		<if test="state != null and state != '' ">
+		    and state = #{state}
+		</if>
+		<if test="deptid != null and deptid != '' ">
+		    and deptid = #{deptid}
+		</if>
+		<if test="createtime != null and createtime != '' ">
+		    and createtime = #{createtime}
+		</if>
+		<if test="leavetime != null and leavetime != '' ">
+		    and leavetime = #{leavetime}
+		</if>
+		<if test="userType != null and userType != '' ">
+		    and userType = #{userType}
+		</if>
+		<if test="sotid != null and sotid != '' ">
+		    and sotid = #{sotid}
+		</if>
+	
+	</trim>
+	</sql>
+	
+	<!-- 动态条件查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="loginname != null and loginname != '' ">
+		    and loginname = #{loginname}
+		</if>
+		<if test="pwd != null and pwd != '' ">
+		    and pwd = #{pwd}
+		</if>
+		<if test="sex != null and sex != '' ">
+		    and sex = #{sex}
+		</if>
+		<if test="icon != null and icon != '' ">
+		    and icon = #{icon}
+		</if>
+		<if test="phoneNum != null and phoneNum != '' ">
+		    and phoneNum = #{phoneNum}
+		</if>
+		<if test="phoneNum2 != null and phoneNum2 != '' ">
+		    and phoneNum2 = #{phoneNum2}
+		</if>
+		<if test="address != null and address != '' ">
+		    and address = #{address}
+		</if>
+		<if test="state != null and state != '' ">
+		    and state = #{state}
+		</if>
+		<if test="deptid != null and deptid != '' ">
+		    and deptid = #{deptid}
+		</if>
+		<if test="createtime != null and createtime != '' ">
+		    and createtime = #{createtime}
+		</if>
+		<if test="leavetime != null and leavetime != '' ">
+		    and leavetime = #{leavetime}
+		</if>
+		<if test="userType != null and userType != '' ">
+		    and userType = #{userType}
+		</if>
+		<if test="sotid != null and sotid != '' ">
+		    and sotid = #{sotid}
+		</if>
+	
+	</trim>
+	</sql>
+ 
+	<!-- 根据id查询  -->
+	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List" /> 
+		from sys_user
+		where id = #{id}
+	</select>
+
+	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
+	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		<include refid="Page_Where_Clause"/>
+	</select>
+
+	<!-- 条件查询所有 -->
+	<select id="selectAllByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user
+		<include refid="Example_Where_Clause"/>
+	</select>
+   
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysUser" >
+	  	insert into sys_user(id,name,loginname,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid)
+		 values(#{id},#{name},#{loginname},#{pwd},#{sex},#{icon},#{phoneNum},#{phoneNum2},#{address},#{state},#{deptid},#{createtime},#{leavetime},#{userType},#{sotid})
+	</insert>
+
+	<!-- 根据id，修改state(逻辑删除)-->  
+	 <update id="updateStateByIds" parameterType="java.lang.Integer" >
+	  	update sys_user set state='0' where id in
+	  	<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	 </update>
+	 
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="com.shupro.oa.admin.model.SysUser" >
+	  	update sys_user set name=#{name},loginname=#{loginname},pwd=#{pwd},sex=#{sex},icon=#{icon},phoneNum=#{phoneNum},phoneNum2=#{phoneNum2},address=#{address},state=#{state},deptid=#{deptid},leavetime=#{leavetime},userType=#{userType},sotid=#{sotid}
+		where id=#{id}
+	 </update>
+ 
+	 <!-- 动态修改记录，只修改只不为空的字段 -->
+	<update id="updateSelective" parameterType="com.shupro.oa.admin.model.SysUser" >
+		update sys_user set 
+		<trim  suffixOverrides="," >
+			<if test="name != null and name != '' ">
+				name=#{name},
+			</if>
+			<if test="loginname != null and loginname != '' ">
+				loginname=#{loginname},
+			</if>
+			<if test="pwd != null and pwd != '' ">
+				pwd=#{pwd},
+			</if>
+			<if test="sex != null and sex != '' ">
+				sex=#{sex},
+			</if>
+			<if test="icon != null and icon != '' ">
+				icon=#{icon},
+			</if>
+			<if test="phoneNum != null and phoneNum != '' ">
+				phoneNum=#{phoneNum},
+			</if>
+			<if test="phoneNum2 != null and phoneNum2 != '' ">
+				phoneNum2=#{phoneNum2},
+			</if>
+			<if test="address != null and address != '' ">
+				address=#{address},
+			</if>
+			<if test="state != null and state != '' ">
+				state=#{state},
+			</if>
+			<if test="deptid != null and deptid != '' ">
+				deptid=#{deptid},
+			</if>
+			<if test="createtime != null  ">
+				createtime=#{createtime},
+			</if>
+			<if test="leavetime != null  ">
+				leavetime=#{leavetime},
+			</if>
+			<if test="userType != null and userType != '' ">
+				userType=#{userType},
+			</if>
+			<if test="sotid != null  ">
+				sotid=#{sotid},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="deleteById" parameterType="com.shupro.oa.admin.model.SysUser" >
+		delete from sys_user where id = #{id}
+	</delete>
+  	
+	<!-- 批量删除记录 -->
+	<delete id="deleteByIds" parameterType="java.lang.Integer" >
+		delete from sys_user where id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	</delete>
+	
+</mapper>

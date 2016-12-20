@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shupro.oa.admin.dao.SysRoleMapper" >
+  	<resultMap id="BaseResultMap" type="com.shupro.oa.admin.model.SysRole" >
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="description" property="description"/>
+		<result column="type" property="type"/>
+		<result column="isenable" property="isenable"/>
+	</resultMap>
+       
+	<sql id="Base_Column_List" >
+		 id,name,description,type,isenable
+	</sql>
+   
+	<!-- 动态分页查询条件 -->
+	<sql id="Page_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="description != null and description != '' ">
+		    and description = #{description}
+		</if>
+		<if test="type != null and type != '' ">
+		    and type = #{type}
+		</if>
+		<if test="isenable != null and isenable != '' ">
+		    and isenable = #{isenable}
+		</if>
+	
+	</trim>
+	</sql>
+	
+	<!-- 动态条件查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="name != null and name != '' ">
+		    and name = #{name}
+		</if>
+		<if test="description != null and description != '' ">
+		    and description = #{description}
+		</if>
+		<if test="type != null and type != '' ">
+		    and type = #{type}
+		</if>
+		<if test="isenable != null and isenable != '' ">
+		    and isenable = #{isenable}
+		</if>
+	
+	</trim>
+	</sql>
+ 
+	<!-- 根据id查询  -->
+	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List" /> 
+		from sys_role
+		where id = #{id}
+	</select>
+
+	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
+	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role
+		<include refid="Page_Where_Clause"/>
+	</select>
+
+	<!-- 条件查询所有 -->
+	<select id="selectAllByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role
+		<include refid="Example_Where_Clause"/>
+	</select>
+   
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysRole" >
+	  	insert into sys_role(id,name,description,type,isenable)
+		 values(#{id},#{name},#{description},#{type},#{isenable})
+	</insert>
+
+	<!-- 根据id，修改state(逻辑删除)-->  
+	 <update id="updateStateByIds" parameterType="java.lang.Integer" >
+	  	update sys_role set isenable='0' where id in
+	  	<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	 </update>
+	 
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="com.shupro.oa.admin.model.SysRole" >
+	  	update sys_role set name=#{name},description=#{description},type=#{type},isenable=#{isenable}
+		where id=#{id}
+	 </update>
+ 
+	 <!-- 动态修改记录，只修改只不为空的字段 -->
+	<update id="updateSelective" parameterType="com.shupro.oa.admin.model.SysRole" >
+		update sys_role set 
+		<trim  suffixOverrides="," >
+			<if test="name != null and name != '' ">
+				name=#{name},
+			</if>
+			<if test="description != null and description != '' ">
+				description=#{description},
+			</if>
+			<if test="type != null and type != '' ">
+				type=#{type},
+			</if>
+			<if test="isenable != null and isenable != '' ">
+				isenable=#{isenable},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="deleteById" parameterType="com.shupro.oa.admin.model.SysRole" >
+		delete from sys_role where id = #{id}
+	</delete>
+  	  	
+	<!-- 批量删除记录 -->
+	<delete id="deleteByIds" parameterType="java.lang.Integer" >
+		delete from sys_role where id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=",">  
+			#{id}
+		</foreach>
+	</delete>
+	
+</mapper>
