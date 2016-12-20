@@ -1,0 +1,19 @@
+
+
+http://www.cnblogs.com/wxisme/p/4925331.html
+
+http://blog.csdn.net/acmman/article/details/47604099
+
+
+
+http://www.2cto.com/kf/201308/236837.html
+
+http://www.2cto.com/kf/201311/257160.html
+
+
+tomcat集群
+http://www.iteye.com/topic/676347
+
+http://my.oschina.net/fenno/blog/111188
+
+阿里云的mns (消息队列)
