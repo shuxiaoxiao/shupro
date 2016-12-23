@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shupro.core.utils.SystemUtil;
+import com.shupro.core.utils.digest.DigestUtil;
 import com.shupro.core.utils.page.PageBean;
 import com.shupro.core.vo.Result;
 import com.shupro.oa.admin.model.SysUser;
@@ -49,7 +51,8 @@ public class SysUserController {
 		map.put("pageSize", request.getParameter("rows"));
 		//查询域的查询条件
 		//map.put("deptid", request.getParameter("deptid"));
-		map.put("name", request.getParameter("name"));
+		map.put("loginName", request.getParameter("loginName"));
+		map.put("state", "1");
 		PageBean<SysUser> list = sysUserService.select2PageBean(map);
 		
 		return list;
@@ -66,6 +69,10 @@ public class SysUserController {
     	String message = "发生错误";
     	
     	try {
+    		String pwd = sysUser.getPwd();
+    		if(SystemUtil.isNotEmpty(pwd)){
+    			sysUser.setPwd(DigestUtil.md5(pwd));
+    		}
     		int count = sysUserService.insert(sysUser);
     		if(count > 0){
     			code = 200;
@@ -90,6 +97,10 @@ public class SysUserController {
     	String message = "发生错误";
     	
     	try {
+//    		String pwd = sysUser.getPwd();
+//    		if(SystemUtil.isNotEmpty(pwd)){
+//    			sysUser.setPwd(DigestUtil.md5(pwd));
+//    		}
     		int count = sysUserService.updateSelective(sysUser);
     		if(count > 0){
     			code = 200;
@@ -104,8 +115,34 @@ public class SysUserController {
     }
     
     /**
-     * 删除(post方式)
+     * 逻辑删除用户,并删除中间表(post方式)
      * 返回的是json
+     * @param ids 用户id数组
+     */
+    @RequestMapping(value = "/logicDelete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result logicDelete(@RequestParam Integer[] ids){
+    	int code = 500;
+    	String message = "发生错误";
+    	
+    	try {
+    		int count = sysUserService.logicDeleteByIds(ids);
+    		if(count > 0){
+    			code = 200;
+    			message = "成功";
+    		}
+    	} catch (Exception e) {
+    		message = "发生异常";
+    		e.printStackTrace();
+    	}
+    	
+    	return new Result(code, message);      
+    }
+    
+    /**
+     * 物理删除用户(post方式)
+     * 返回的是json
+     * @param ids 用户id数组
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
@@ -150,5 +187,38 @@ public class SysUserController {
     	return new Result(code, message);        
     }
     */
+    
+    
+    /**
+     * 物理删除用户(post方式)
+     * 返回的是json
+     * @param ids 用户id数组
+     */
+    @RequestMapping(value = "/resetPwd", method = RequestMethod.POST)
+    @ResponseBody
+    public Result resetPwd(SysUser sysUser){
+    	int code = 500;
+    	String message = "发生错误";
+    	
+    	try {
+    		//未做后端验证
+    		String pwd = sysUser.getPwd();
+    		if(SystemUtil.isNotEmpty(pwd)){
+//    			pwd = DigestUtil.md5(pwd);
+    			sysUser.setPwd(DigestUtil.md5(pwd));
+    		}
+//    		int count = sysUserService.resetPwd(sysUser);
+    		int count = sysUserService.updateSelective(sysUser);
+    		if(count > 0){
+    			code = 200;
+				message = "操作成功";
+    		}
+    	} catch (Exception e) {
+    		message = "发生异常";
+    		e.printStackTrace();
+    	}
+    	
+    	return new Result(code, message);      
+    }
 	
 }

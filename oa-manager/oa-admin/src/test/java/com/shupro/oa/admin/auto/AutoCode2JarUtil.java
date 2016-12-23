@@ -18,7 +18,7 @@ public class AutoCode2JarUtil {
 		String username = "root"; 
 		String password = "root"; 
 		String databaseName = "myoa";
-		String tableName = "sys_log"; 
+		String tableName = "sys_user_role"; 
 		String appPackagePrefix = "com.shupro.oa"; 
 		String appName = "admin"; 
 		String sourceRoot = "src/main/java";
@@ -40,6 +40,10 @@ public class AutoCode2JarUtil {
 //		AutoCreateClassUtil.generate2Jar(autoModel);
 //		autoModel.setTableName("sys_dictionary");
 //		AutoCreateClassUtil.generate2Jar(autoModel);
+//		autoModel.setTableName("sys_user_role");
+//		AutoCreateClassUtil.generate2Jar(autoModel);
+		autoModel.setTableName("sys_role_menu");
+		AutoCreateClassUtil.generate2Jar(autoModel);
 		
 	}
 	

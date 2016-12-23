@@ -13,7 +13,7 @@
 		<div data-options="region:'north',split:true " style="height:40px;padding: 3px;">
 			<!--部门编号：<input type="text" id="query_deptid" />&nbsp;
 			-->
-			部门名称：<input type="text" id="query_name" />&nbsp;
+			登录名：<input type="text" id="query_loginName" />&nbsp;
 			<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search' " onclick="searchData();">查询</a>
 		</div>
 		<div data-options="region:'center' ">
@@ -23,7 +23,7 @@
 		<!-- 表单(放在layout里面，放在外面会影响grid的高度) -->
 		<div id="dlg" class="easyui-dialog" style="width:450px;height:360px;" 
 			data-options="closed:true, modal:true, left:100, top:50, buttons:'#dlg-buttons' ">
-	    	<form id="fm" method="post" novalidate>
+	    	<form id="fm" method="post">
 	    		<input id="id" name="id" type="hidden">
 	    		<table class="form-table">
 		    		<tr>
@@ -40,14 +40,14 @@
 		    		</tr>
 		    		<tr>
 		    			<td class="form-td-left"> 密码:</td>
-		    			<td><input class="easyui-textbox form-input" name="pwd" 
+		    			<td><input class="easyui-textbox form-input" name="pwd" id="pwd" 
 		    				data-options="missingMessage:'请填写密码', " maxlength="50" />
 		    			</td>
 		    		</tr>
 		    		<tr>
 		    			<td class="form-td-left"> 性别:</td>
-		    			<td><input class="easyui-textbox form-input" name="sex" 
-		    				data-options="missingMessage:'请填写性别', " maxlength="1" />
+		    			<td>
+		    				<input class="form-input" id="sex" name="sex" />
 		    			</td>
 		    		</tr>
 		    		<tr>
@@ -76,14 +76,17 @@
 		    		</tr>
 		    		<tr>
 		    			<td class="form-td-left"> 用户状态:</td>
-		    			<td><input class="easyui-textbox form-input" name="state" 
-		    				data-options="missingMessage:'请填写用户状态', " maxlength="1" />
+		    			<td>
+			    			<select class="easyui-combobox  form-input" id="state" name="state">
+								<option value="0">不可用</option>
+								<option value="1">可用</option>
+							</select>
 		    			</td>
 		    		</tr>
 		    		<tr>
 		    			<td class="form-td-left"> 部门id:</td>
-		    			<td><input class="easyui-textbox form-input" name="deptid" 
-		    				data-options="missingMessage:'请填写部门id', " maxlength="50" />
+		    			<td>
+		    				<input class="form-input" id="deptid" name="deptid" />
 		    			</td>
 		    		</tr>
 		    		<tr>
@@ -98,12 +101,12 @@
 		    				data-options="missingMessage:'请填写离职时间', " maxlength="" />
 		    			</td>
 		    		</tr>
-		    		<tr>
+		    		<!-- <tr>
 		    			<td class="form-td-left"> 用户类型:</td>
 		    			<td><input class="easyui-textbox form-input" name="userType" 
 		    				data-options="missingMessage:'请填写用户类型', " maxlength="2" />
 		    			</td>
-		    		</tr>
+		    		</tr> -->
 		    		<tr>
 		    			<td class="form-td-left"> 排序号:</td>
 		    			<td><input class="easyui-numberbox form-input" name="sotid" 
@@ -122,6 +125,9 @@
 <script type="text/javascript">
 
 	var $grid = $('#sysUserGrid');
+	var $sexCombo = $('#sex');
+	var $deptidCombotree = $('#deptid');
+	
 	/**
 	 * 查询用户
 	 */
@@ -129,7 +135,7 @@
 
 		$grid.datagrid('load',{
 			//'deptid': $('#query_deptid').val(),
-			'name': $('#query_name').val()
+			'loginName': $('#query_loginName').val()
 		});
 	}
 	
@@ -149,18 +155,26 @@
 		        {field:'ck', width:50, checkbox: true},
 				{field:'name',title:'名称'},    
 				{field:'loginName',title:'登录名'},    
-				{field:'pwd',title:'密码'},    
-				{field:'sex',title:'性别'},    
-				{field:'icon',title:'图标'},    
+				{field:'sexName',title:'性别'},    
+				/* {field:'pwd',title:'密码'},    
+				{field:'icon',title:'图标'}, */    
 				{field:'phoneNum',title:'手机号'},    
 				{field:'phoneNum2',title:'备用号'},    
 				{field:'address',title:'地址'},    
-				{field:'state',title:'用户状态'},    
+				{field:'state',title:'用户状态',
+					formatter: function(val,row){
+						if (val == '0'){
+							return '不可用';
+						} else {
+							return '可用';
+						}
+					}
+				},    
 				{field:'deptid',title:'部门id'},    
 				{field:'createtime',title:'入职时间'},    
 				{field:'leavetime',title:'离职时间'},    
-				{field:'userType',title:'用户类型'},    
-				{field:'sotid',title:'排序号'},    
+				/* {field:'userType',title:'用户类型'}, */    
+				{field:'sotid',title:'排序号'}    
 		    ]] ,
 		    toolbar:[{
 	    		text:'新 增' ,
@@ -180,8 +194,58 @@
 				handler:function(){
 		    		del();
 				}
+		     },{
+		    	text:'重置密码' ,
+				iconCls:'icon-edit' , 
+				handler:function(){
+		    		resetPwd();
+				}
+		     },'-',{
+		    	text:'导入' ,
+				iconCls:'icon-excel' , 
+				handler:function(){
+		    		resetPwd();
+				}
+		     },{
+		    	text:'导出' ,
+				iconCls:'icon-excel' , 
+				handler:function(){
+		    		resetPwd();
+				}
+		     },{
+		    	text:'导出设置' ,
+				iconCls:'icon-excel' , 
+				handler:function(){
+		    		resetPwd();
+				}
 		    }]
 		});
+		
+		$sexCombo.combobox({
+			url : '${path}/sysDictionary/select2Combo',
+			queryParams : {
+				pid : 1
+			},
+			missingMessage : '请选择性别',
+			valueField: 'value',
+	        textField: 'name'
+		});
+		
+		$deptidCombotree.combotree({
+			url: '${path}/sysDept/tree' ,  
+			required: true ,
+			missingMessage: '请选择部门',
+			onLoadSuccess : function(node, data){
+				var treeObj = $deptidCombotree.combotree('tree');
+				var rooNode = treeObj.tree('getRoot');
+				//console.log(rooNode);
+				//展开根节点
+				treeObj.tree('expand',rooNode.target);
+				//生效,但是是展开所有
+				//treeObj.tree('expandAll');
+			}
+		});
+		
 	});
 	
 	var url='';//表单提交url
@@ -201,10 +265,16 @@
 	/**修改*/
 	function initEdit(){
 		var row = $grid.datagrid('getSelected');
+		
 	    if (row){
 	        $('#dlg').dialog('open').dialog('setTitle','修改表单');
+	      	//更新密码单独出一个方法
+	      	row.pwd = '';
 	        //数据回显
 	        $('#fm').form('load',row);
+	      	//更新密码单独出一个方法
+	      	console.log($('#pwd').val());
+	      	
 	        url='update';
 	    }else{
 	    	$.messager.alert('警告','请选择一行操作数据，且只能选择一行！');    
@@ -265,6 +335,53 @@
 		            	url:'${path}/sysUser/delete',
 		            	type: 'post',
 		            	data: {"ids" : ids},
+		            	dataType:"json",
+		        		success:function(result){
+		        			$.messager.progress('close');
+		        			if (result.code == 200){
+		                    	$grid.datagrid('reload');
+		                    	//清空idField(避免删除后在进行修改操作的bug)
+								$grid.datagrid('unselectAll');
+		                    }else{
+		                    	$.messager.alert('警告',result.message);
+		                    }
+		        		},
+		        		error:function(request,msg){
+		        			$.messager.progress('close');
+		        			$.messager.alert('警告','删除失败' + msg);
+		        		}
+		            });
+	        	}
+	        });
+		}
+	}
+	
+	/**重置密码*/
+	function resetPwd(){
+		//此处是getSelections(返回所有被选中的行)
+		var row = $grid.datagrid('getSelections');
+		
+		if(row.length <=0){
+			$.messager.show({
+				title:'提示信息!',
+				msg:'至少选择一行记录进行删除!'
+			});
+		} else {
+	        $.messager.confirm('提示','确定要重置密码(默认为123456)吗?',function(r){
+	        	if(r){
+		        	$.messager.progress({
+			                title:'请稍后',
+			                msg:'正在删除...'
+			            });
+	        		var ids = '';
+					for(var i = 0, max = row.length; i < max; i++){
+						ids += row[i].id + ',';
+					}
+					ids = ids.substring(0, ids.length-1);
+		            $.ajax({
+		            	url:'${path}/sysUser/resetPwd',
+		            	type: 'post',
+		            	data: {"ids" : ids, "pwd" : "123456"},
 		            	dataType:"json",
 		        		success:function(result){
 		        			$.messager.progress('close');

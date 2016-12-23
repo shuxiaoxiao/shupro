@@ -105,7 +105,14 @@
 	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select <include refid="Base_Column_List" /> 
 		from sys_dept
-		where id = #{id}
+		where id = #{id} and isenable=1
+	</select>
+		
+	<!-- 根据pid查询  -->
+	<select id="selectByPid"  resultMap="BaseResultMap" parameterType="java.lang.String">
+		select <include refid="Base_Column_List" /> 
+	 from sys_dept 
+	 where pid = #{pid} and isenable=1
 	</select>
 
 	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->

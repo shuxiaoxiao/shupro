@@ -2,6 +2,8 @@ package com.shupro.oa.admin.model;
 
 import java.io.Serializable;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class SysLog implements Serializable {
 	
 	private Integer id;// 
@@ -9,6 +11,7 @@ public class SysLog implements Serializable {
 	private String roleName;// 角色名
 	private String content;// 内容
 	private String clientIp;// 客户端ip
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private java.util.Date createtime;// 创建时间
 	public Integer getId() {
 	    return this.id;

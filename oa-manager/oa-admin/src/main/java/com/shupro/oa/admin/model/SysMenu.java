@@ -2,12 +2,15 @@ package com.shupro.oa.admin.model;
 
 import java.io.Serializable;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class SysMenu implements Serializable {
 	
 	private Integer id;// 
 	private String name;// 菜单名称
 	private Integer pid;// 父id
 	private String levels;// 层级
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private java.util.Date createtime;// 创建时间
 	private String requestUrl;// 请求路径
 	private String menuType;// 菜单类型,1菜单 2按钮

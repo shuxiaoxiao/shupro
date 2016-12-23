@@ -52,6 +52,7 @@ public class SysMenuController {
 		//查询域的查询条件
 		//map.put("deptid", request.getParameter("deptid"));
 		map.put("name", request.getParameter("name"));
+		map.put("isenable", "1");
 		PageBean<SysMenu> list = sysMenuService.select2PageBean(map);
 		
 		return list;
@@ -120,6 +121,30 @@ public class SysMenuController {
     		if(count > 0){
     			code = 200;
 				message = "成功";
+    		}
+    	} catch (Exception e) {
+    		message = "发生异常";
+    		e.printStackTrace();
+    	}
+    	
+    	return new Result(code, message);      
+    }
+    
+    /**
+     * 逻辑删除(post方式)
+     * 返回的是json
+     */
+    @RequestMapping(value = "/logicDelete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result logicDelete(@RequestParam Integer[] ids){
+    	int code = 500;
+    	String message = "发生错误";
+    	
+    	try {
+    		int count = sysMenuService.logicDeleteByIds(ids);
+    		if(count > 0){
+    			code = 200;
+    			message = "成功";
     		}
     	} catch (Exception e) {
     		message = "发生异常";

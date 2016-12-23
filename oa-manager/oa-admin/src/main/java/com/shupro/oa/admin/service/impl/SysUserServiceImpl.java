@@ -7,11 +7,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shupro.core.common.AbstractService;
 import com.shupro.core.common.BaseMapper;
 import com.shupro.core.utils.SystemUtil;
 import com.shupro.oa.admin.dao.SysUserMapper;
+import com.shupro.oa.admin.dao.SysUserRoleMapper;
 import com.shupro.oa.admin.model.SysUser;
 import com.shupro.oa.admin.service.SysUserService;
 
@@ -20,6 +22,8 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 	
 	@Autowired
 	private SysUserMapper sysUserMapper;
+	@Autowired
+	private SysUserRoleMapper sysUserRoleMapper;
 	
 	/**具体子类service的实现需要使用的mapper*/
 	@Override
@@ -29,14 +33,20 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 	}
 
 	@Override
-	public int logicDeleteByIds(Serializable[] ids) {
-		return sysUserMapper.updateStateByIds(ids);
+	@Transactional
+	public int logicDeleteByIds(Serializable[] ids) throws Exception {
+		sysUserMapper.updateStateByIds(ids);
+		Map<String, Object> map = new HashMap<>();
+		map.put("userIds", ids);
+		sysUserRoleMapper.deleteByMap(map);
+		
+		return 1;
 	}
 
 	@Override
-	public SysUser checkLoginName(String loginname) {
+	public SysUser checkLoginName(String loginName) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("loginname", loginname);
+		map.put("loginName", loginName);
 		
 		List<SysUser> list = sysUserMapper.selectAllByCondition(map);
 		if(SystemUtil.isEmpty(list)){
@@ -47,9 +57,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 	}
 
 	@Override
-	public SysUser login(String loginname, String password) {
+	public SysUser login(String loginName, String password) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("loginname", loginname);
+		map.put("loginName", loginName);
 		map.put("pwd", password);
 		
 		List<SysUser> list = sysUserMapper.selectAllByCondition(map);
@@ -59,5 +69,19 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 			return list.get(0);
 		}
 	}
+
+//	@Override
+//	public int resetPwd(SysUser sysUser) {
+//		
+//		return sysUserMapper.updateSelective(sysUser);
+//	}
+//	@Override
+//	public int resetPwd(Integer[] ids, String pwd) {
+//		SysUser sysUser = new SysUser();
+//		sysUser.setPwd(pwd);
+//		sysUser.setIds(ids);
+//		
+//		return sysUserMapper.updateSelective(sysUser);
+//	}
 
 }

@@ -4,7 +4,7 @@
   	<resultMap id="BaseResultMap" type="com.shupro.oa.admin.model.SysUser" >
 		<id column="id" property="id"/>
 		<result column="name" property="name"/>
-		<result column="loginname" property="loginname"/>
+		<result column="loginName" property="loginName"/>
 		<result column="pwd" property="pwd"/>
 		<result column="sex" property="sex"/>
 		<result column="icon" property="icon"/>
@@ -20,7 +20,7 @@
 	</resultMap>
        
 	<sql id="Base_Column_List" >
-		 id,name,loginname,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid
+		 id,name,loginName,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid
 	</sql>
    
 	<!-- 动态分页查询条件 -->
@@ -33,8 +33,8 @@
 		<if test="name != null and name != '' ">
 		    and name = #{name}
 		</if>
-		<if test="loginname != null and loginname != '' ">
-		    and loginname = #{loginname}
+		<if test="loginName != null and loginName != '' ">
+		    and loginName = #{loginName}
 		</if>
 		<if test="pwd != null and pwd != '' ">
 		    and pwd = #{pwd}
@@ -86,8 +86,8 @@
 		<if test="name != null and name != '' ">
 		    and name = #{name}
 		</if>
-		<if test="loginname != null and loginname != '' ">
-		    and loginname = #{loginname}
+		<if test="loginName != null and loginName != '' ">
+		    and loginName = #{loginName}
 		</if>
 		<if test="pwd != null and pwd != '' ">
 		    and pwd = #{pwd}
@@ -138,8 +138,8 @@
 
 	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
 	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
-		select
-		<include refid="Base_Column_List" />
+		select (select name from sys_dictionary where pid = 1 and value = sex) sexName,
+			<include refid="Base_Column_List" />
 		from sys_user
 		<include refid="Page_Where_Clause"/>
 	</select>
@@ -154,8 +154,8 @@
    
 	<!-- 插入记录 -->
 	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysUser" >
-	  	insert into sys_user(id,name,loginname,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid)
-		 values(#{id},#{name},#{loginname},#{pwd},#{sex},#{icon},#{phoneNum},#{phoneNum2},#{address},#{state},#{deptid},#{createtime},#{leavetime},#{userType},#{sotid})
+	  	insert into sys_user(id,name,loginName,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid)
+		 values(#{id},#{name},#{loginName},#{pwd},#{sex},#{icon},#{phoneNum},#{phoneNum2},#{address},#{state},#{deptid},#{createtime},#{leavetime},#{userType},#{sotid})
 	</insert>
 
 	<!-- 根据id，修改state(逻辑删除)-->  
@@ -168,7 +168,7 @@
 	 
 	<!-- 根据id，修改记录-->  
 	 <update id="update" parameterType="com.shupro.oa.admin.model.SysUser" >
-	  	update sys_user set name=#{name},loginname=#{loginname},pwd=#{pwd},sex=#{sex},icon=#{icon},phoneNum=#{phoneNum},phoneNum2=#{phoneNum2},address=#{address},state=#{state},deptid=#{deptid},leavetime=#{leavetime},userType=#{userType},sotid=#{sotid}
+	  	update sys_user set name=#{name},loginName=#{loginName},pwd=#{pwd},sex=#{sex},icon=#{icon},phoneNum=#{phoneNum},phoneNum2=#{phoneNum2},address=#{address},state=#{state},deptid=#{deptid},leavetime=#{leavetime},userType=#{userType},sotid=#{sotid}
 		where id=#{id}
 	 </update>
  
@@ -179,8 +179,8 @@
 			<if test="name != null and name != '' ">
 				name=#{name},
 			</if>
-			<if test="loginname != null and loginname != '' ">
-				loginname=#{loginname},
+			<if test="loginName != null and loginName != '' ">
+				loginName=#{loginName},
 			</if>
 			<if test="pwd != null and pwd != '' ">
 				pwd=#{pwd},
@@ -219,7 +219,16 @@
 				sotid=#{sotid},
 			</if>
 		</trim>
-		where id=#{id}
+		where 1=1 
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="ids != null ">
+			and id in 
+			<foreach collection="ids" item="idItem" open="(" close=")" separator=",">  
+				#{idItem}
+			</foreach>
+		</if>
 	</update>
 
 	<!-- 删除记录 -->

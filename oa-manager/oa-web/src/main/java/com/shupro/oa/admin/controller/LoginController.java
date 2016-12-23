@@ -24,6 +24,7 @@ import com.shupro.oa.admin.service.SysUserService;
 @Controller
 //@RequestMapping("/")
 public class LoginController {
+	
 	@Autowired
 	private SysUserService sysUserService;
 
@@ -42,22 +43,26 @@ public class LoginController {
     	String message = "发生错误";
     	
         try {
-        	String loginname = request.getParameter("loginname");
+        	String loginName = request.getParameter("loginName");
         	String password = request.getParameter("password");
-			if (SystemUtil.isEmpty(loginname) || SystemUtil.isEmpty(password)) {
+			if (SystemUtil.isEmpty(loginName) || SystemUtil.isEmpty(password)) {
 			    message = "用户名或密码不能为空";
 			    
 			}else{//检验通过
 				//md5加密 密码
 				password = DigestUtil.md5(password);
-				SysUser sysUser = sysUserService.login(loginname, password);
+				SysUser sysUser = sysUserService.login(loginName, password);
 				if (null != sysUser) {
-					//保存用户到session
-					request.getSession().setAttribute("userInfo", sysUser);
-					
-					//成功显示首页
-					code = 200;
-					message = "/home";
+					if("1".equals(sysUser.getState())){
+						//保存用户到session
+						request.getSession().setAttribute("userInfo", sysUser);
+						
+						//成功显示首页
+						code = 200;
+						message = "/home";
+					}else{
+						message = "该用户已被删除";
+					}
 					
 				}else{
 					message = "用户名或密码错误";

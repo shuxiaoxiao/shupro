@@ -45,12 +45,12 @@ public class SpringTest {
 	public void insert_test() {
 		SysUser sysUser1 = new SysUser();
 		sysUser1.setName("cc");
-		sysUser1.setLoginname("cc");
+		sysUser1.setLoginName("cc");
 		sysUser1.setPwd("cc");
 		System.out.println("insert:"+ sysUserService.insert(sysUser1));
 		SysUser sysUser2 = new SysUser();
 		sysUser2.setName("dd");
-		sysUser2.setLoginname("dd");
+		sysUser2.setLoginName("dd");
 		sysUser2.setPwd("bb");
 		System.out.println("insert:"+ sysUserService.insert(sysUser2));
 	}

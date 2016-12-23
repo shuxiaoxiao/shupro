@@ -52,6 +52,7 @@ public class SysRoleController {
 		//查询域的查询条件
 		//map.put("deptid", request.getParameter("deptid"));
 		map.put("name", request.getParameter("name"));
+		map.put("isenable", "1");
 		PageBean<SysRole> list = sysRoleService.select2PageBean(map);
 		
 		return list;
@@ -106,17 +107,17 @@ public class SysRoleController {
     }
     
     /**
-     * 删除(post方式)
+     * 逻辑删除角色,并删除中间表(post方式)
      * 返回的是json
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/logicDelete", method = RequestMethod.POST)
     @ResponseBody
-    public Result delete(@RequestParam Integer[] ids){
+    public Result logicDelete(@RequestParam Integer[] ids){
     	int code = 500;
     	String message = "发生错误";
     	
     	try {
-    		int count = sysRoleService.deleteById(ids);
+    		int count = sysRoleService.logicDeleteByIds(ids);
     		if(count > 0){
     			code = 200;
 				message = "成功";
@@ -130,7 +131,31 @@ public class SysRoleController {
     }
     
     /**
-     * 删除(get方式)
+     * 物理删除角色(post方式)
+     * 返回的是json
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result delete(@RequestParam Integer[] ids){
+    	int code = 500;
+    	String message = "发生错误";
+    	
+    	try {
+    		int count = sysRoleService.deleteById(ids);
+    		if(count > 0){
+    			code = 200;
+    			message = "成功";
+    		}
+    	} catch (Exception e) {
+    		message = "发生异常";
+    		e.printStackTrace();
+    	}
+    	
+    	return new Result(code, message);      
+    }
+    
+    /**
+     * 物理删除(get方式)
      * 返回的是json
     @RequestMapping(value = "/delete/{ids}", method = RequestMethod.GET)
     @ResponseBody

@@ -79,7 +79,7 @@ public class SysLogAop {
             	if (null != request) {
             		if(null != userInfo) {
                 		SysLog sysLog = new SysLog();
-                		sysLog.setLoginName(userInfo.getLoginname());
+                		sysLog.setLoginName(userInfo.getLoginName());
                 		sysLog.setRoleName(userInfo.getRolename());
                 		sysLog.setContent(strMessage);
                 		sysLog.setCreatetime(new Date());

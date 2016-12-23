@@ -13,14 +13,14 @@ public interface SysUserService extends BaseService<SysUser> {
 	 * @param ids
 	 * @return
 	 */
-	int logicDeleteByIds(Serializable[] ids);
+	int logicDeleteByIds(Serializable[] ids) throws Exception;
 
 	/**
 	 * 检查登录名（唯一）
 	 * @param loginName
 	 * @return
 	 */
-	SysUser checkLoginName(String loginname);
+	SysUser checkLoginName(String loginName);
 	
 	/**
 	 * 登录
@@ -28,6 +28,14 @@ public interface SysUserService extends BaseService<SysUser> {
 	 * @param password
 	 * @return
 	 */
-	SysUser login(String loginname, String password);
+	SysUser login(String loginName, String password);
+
+//	/**
+//	 * 重置或修改密码(底层实际还是updateSelective)
+//	 * @param ids
+//	 * @param pwd 新密码
+//	 * @return
+//	 */
+//	int resetPwd(SysUser sysUser);
 	
 }

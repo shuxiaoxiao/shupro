@@ -1,6 +1,7 @@
 package com.shupro.oa.admin.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shupro.core.utils.SystemUtil;
 import com.shupro.core.utils.page.PageBean;
 import com.shupro.core.vo.Result;
+import com.shupro.core.vo.TreeNode;
 import com.shupro.oa.admin.model.SysDept;
 import com.shupro.oa.admin.service.SysDeptService;
 
@@ -32,6 +35,32 @@ public class SysDeptController {
 	public String init() {
 		
 		return "admin/sysDept";
+	}
+
+	@RequestMapping("/treeGrid")
+	@ResponseBody
+	public List<SysDept> treeGrid(HttpServletRequest request) {
+		String pid = request.getParameter("id");
+		if (SystemUtil.isEmpty(pid)) {
+			pid = "0";
+		}
+		List<SysDept> list = sysDeptService.selectByPid(pid);
+		
+		return list;
+	}
+	
+	@RequestMapping("/tree")
+	@ResponseBody
+	public List<TreeNode> tree(HttpServletRequest request) {
+		//根节点默认为pid=0
+		String pid = request.getParameter("id");
+		if (SystemUtil.isEmpty(pid)) {
+			pid = "0";
+		}
+		List<SysDept> list = sysDeptService.selectByPid(pid);
+		List<TreeNode> treeList = sysDeptService.select2tree(list);
+		
+		return treeList;
 	}
 	
 	/**
@@ -55,7 +84,7 @@ public class SysDeptController {
     		//查询域的查询条件
     		//map.put("deptid", request.getParameter("deptid"));
     		map.put("name", request.getParameter("name"));
-    		
+    		map.put("isenable", "1");
     		list = sysDeptService.select2PageBean(map);
 //    		code = 200;
 //    		message = "成功";
@@ -117,7 +146,31 @@ public class SysDeptController {
     }
     
     /**
-     * 删除，post
+     * 逻辑删除
+     * 返回的是text
+     */
+    @RequestMapping(value = "/logicDelete", method = RequestMethod.POST)
+    @ResponseBody
+    public Result logicDelete(@RequestParam Integer[] ids){
+    	int code = 500;
+    	String message = "发生错误";
+    	
+    	try {
+    		int count = sysDeptService.logicDeleteByIds(ids);
+    		if(count > 0){
+    			code = 200;
+				message = "成功";
+    		}
+    	} catch (Exception e) {
+    		message = "发生异常";
+    		e.printStackTrace();
+    	}
+    	
+    	return new Result(code, message);
+    }
+    
+    /**
+     * 物理删除，post
      * 返回的是text
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -140,7 +193,7 @@ public class SysDeptController {
     	return new Result(code, message);
     }
     /**
-     * 删除，get
+     * 物理删除，get
      * 返回的是text
     @RequestMapping(value = "/delete/{ids}", method = RequestMethod.GET)
     @ResponseBody
@@ -162,29 +215,5 @@ public class SysDeptController {
     	return new Result(code, message);
     }
     */
-    
-    /**
-     * 删除
-     * 返回的是text
-     */
-    @RequestMapping(value = "/logicDelete", method = RequestMethod.POST)
-    @ResponseBody
-    public Result logicDelete(@RequestParam Integer[] ids){
-    	int code = 500;
-    	String message = "发生错误";
-    	
-    	try {
-    		int count = sysDeptService.logicDeleteByIds(ids);
-    		if(count > 0){
-    			code = 200;
-				message = "成功";
-    		}
-    	} catch (Exception e) {
-    		message = "发生异常";
-    		e.printStackTrace();
-    	}
-    	
-    	return new Result(code, message);
-    }
 	
 }

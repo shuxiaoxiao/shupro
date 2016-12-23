@@ -13,6 +13,6 @@ public interface SysMenuService extends BaseService<SysMenu> {
 	 * @param ids
 	 * @return
 	 */
-	int logicDeleteByIds(Serializable[] ids);
+	int logicDeleteByIds(Serializable[] ids) throws Exception;
 	
 }

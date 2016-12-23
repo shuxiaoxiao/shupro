@@ -9,10 +9,10 @@ import com.shupro.core.common.BaseService;
 public interface SysRoleService extends BaseService<SysRole> {
 	
 	/**
-	 * 通过主键id数组 删除(底层是mybatis的foreach)
+	 * 通过主键id数组 逻辑 删除,并删除 用户角色中间表、角色菜单中间表
 	 * @param ids
 	 * @return
 	 */
-	int logicDeleteByIds(Serializable[] ids);
+	int logicDeleteByIds(Serializable[] ids) throws Exception;
 	
 }

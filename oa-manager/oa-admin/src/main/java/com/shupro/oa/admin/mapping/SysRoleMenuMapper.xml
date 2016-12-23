@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shupro.oa.admin.dao.SysRoleMenuMapper" >
+  	<resultMap id="BaseResultMap" type="com.shupro.oa.admin.model.SysRoleMenu" >
+		<id column="id" property="id"/>
+		<result column="roleId" property="roleId"/>
+		<result column="menuId" property="menuId"/>
+	</resultMap>
+       
+	<sql id="Base_Column_List" >
+		 id,roleId,menuId
+	</sql>
+   
+	<!-- 动态分页查询条件 -->
+	<sql id="Page_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="roleId != null and roleId != '' ">
+		    and roleId = #{roleId}
+		</if>
+		<if test="menuId != null and menuId != '' ">
+		    and menuId = #{menuId}
+		</if>
+	
+	</trim>
+	</sql>
+	
+	<!-- 动态条件查询条件 -->
+	<sql id="Example_Where_Clause">
+	where 1=1
+	<trim suffixOverrides="," >
+		<if test="id != null and id != '' ">
+		    and id = #{id}
+		</if>
+		<if test="roleId != null and roleId != '' ">
+		    and roleId = #{roleId}
+		</if>
+		<if test="menuId != null and menuId != '' ">
+		    and menuId = #{menuId}
+		</if>
+	
+	</trim>
+	</sql>
+ 
+	<!-- 根据id查询  -->
+	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List" />
+	from sys_role_menu
+	where id = #{id}
+	</select>
+
+	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
+	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role_menu
+		<include refid="Page_Where_Clause"/>
+	</select>
+
+	<!-- 条件查询所有 -->
+	<select id="selectAllByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role_menu
+		<include refid="Example_Where_Clause"/>
+	</select>
+   
+	<!-- 插入记录 -->
+	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysRoleMenu" >
+	  	insert into sys_role_menu(id,roleId,menuId)
+		 values(#{id},#{roleId},#{menuId})
+	</insert>
+
+	<!-- 根据id，修改记录-->  
+	 <update id="update" parameterType="com.shupro.oa.admin.model.SysRoleMenu" >
+	  	update sys_role_menu set roleId=#{roleId},menuId=#{menuId}
+		where id=#{id}
+	 </update>
+ 
+	 <!-- 动态修改记录，只修改只不为空的字段 -->
+	<update id="updateSelective" parameterType="com.shupro.oa.admin.model.SysRoleMenu" >
+		update sys_role_menu set 
+		<trim  suffixOverrides="," >
+			<if test="roleId != null  ">
+				roleId=#{roleId},
+			</if>
+			<if test="menuId != null  ">
+				menuId=#{menuId},
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="deleteById" parameterType="com.shupro.oa.admin.model.SysRoleMenu" >
+		delete from sys_role_menu where id = #{id}
+	</delete>
+
+	<!-- 批量删除记录 -->
+	<delete id="deleteByIds" parameterType="java.lang.Integer" >
+		delete from sys_role_menu where id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			 #{id}
+		</foreach>
+	</delete>
+  	
+	<!-- 批量删除记录 -->
+	<delete id="deleteByMap" parameterType="java.util.Map" >
+		delete from sys_role_menu where 1=1
+		<if test="id != null ">
+		    and id in 
+		    <foreach collection="ids" item="idItem" open="(" close=")" separator=","> 
+				 #{idItem}
+			</foreach>
+		</if>
+		<if test="menuIds != null ">
+		    and menuId in 
+		    <foreach collection="menuIds" item="idItem" open="(" close=")" separator=","> 
+				 #{idItem}
+			</foreach>
+		</if>
+		<if test="roleIds != null ">
+		    and roleId in
+		    <foreach collection="roleIds" item="idItem" open="(" close=")" separator=","> 
+				 #{idItem}
+			</foreach>
+		</if>
+	</delete>
+	
+</mapper>

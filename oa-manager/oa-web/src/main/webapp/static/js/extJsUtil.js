@@ -228,11 +228,12 @@ $.extend($.fn.datagrid.methods, gridTooltipOptions);
 $.extend($.fn.treegrid.methods, gridTooltipOptions);
 
 /**
- *  
- * 
  * @requires jQuery,EasyUI
  * 
- * 扩展validatebox，添加验证两次密码功能
+ * 扩展validatebox
+ * function(value, param) 使用时是 eqPwd[] 
+ * function(value) 使用时是 engNum
+ * 
  */
 $.extend($.fn.validatebox.defaults.rules, {
 	//二次密码是否一致
@@ -244,14 +245,14 @@ $.extend($.fn.validatebox.defaults.rules, {
     },
 	//  只允许输入英文字母或数字
 	engNum: {
-	    validator: function (value, param) {
+	    validator: function (value) {
 	        return /^[0-9a-zA-Z]*$/.test(value);
 	    },
 	    message: '请输入英文字母或数字'
 	},
 	//  只允许汉字、英文字母或数字
 	chsEngNum: {
-	    validator: function (value, param) {
+	    validator: function (value) {
 	        return /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9])*$/.test(value);
 	    },
 	    message: '只允许汉字、英文字母或数字。'
@@ -285,7 +286,7 @@ $.extend($.fn.validatebox.defaults.rules, {
      * 电信号段: 133,153,180,181,189,177,1700
      */
 	mobile: {
-	    validator: function (value, param) { 
+	    validator: function (value) { 
 	    	return /^1(3[0-9]|4[57]|5[0-35-9]|7[06-8]|8[0-9])\\d{8}$/.test(value);
 	    },
 	    message: "不符合手机号码(中国)格式."
