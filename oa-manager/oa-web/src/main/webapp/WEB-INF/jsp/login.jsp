@@ -12,15 +12,16 @@
   <form method="post" id="loginForm">
 		<div class="easyui-panel" title="Login to system" style="width:400px;padding:30px 70px 20px 70px">
 			<div style="margin-bottom:10px;">
-				<input class="easyui-textbox" name="loginName" style="width:100%;height:40px;line-height:40px;padding:12px" 
+				<input class="easyui-textbox" name="loginName" value="${loginName }" style="width:100%;height:40px;line-height:40px;padding:12px" 
 				data-options="required: true,prompt:'请输入账号',iconCls:'icon-man',iconWidth:38" />
 			</div>
 			<div style="margin-bottom:10px">
-				<input class="easyui-textbox" type="password" name="password" style="width:100%;height:40px;padding:12px" 
+				<input class="easyui-textbox" type="password" name="password" value="${password }" style="width:100%;height:40px;padding:12px" 
 				data-options="required: true,prompt:'请输入密码',iconCls:'icon-lock',iconWidth:38" />
 			</div>
-			<div style="margin-bottom:20px;text-align: right;">
-				<input type="checkbox" name="rememberMe" checked="checked" /> 记住我
+			<%-- <div style="margin-bottom:20px;text-align: right;"> --%>
+			<div style="margin-bottom:20px;">
+				<input type="checkbox" name="rememberMe" value="yes" ${checked } /> 记住我
 			</div>
 			
 			<div>
