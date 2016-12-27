@@ -10,7 +10,7 @@ public class SysUser implements Serializable {
 	private String name;// 名称
 	private String loginName;// 登录名
 	private String pwd;// 密码
-	private String sex;// 性别
+	private String sex;// 性别，1男  2女
 	private String icon;// 图标
 	private String phoneNum;// 手机号
 	private String phoneNum2;// 备用号

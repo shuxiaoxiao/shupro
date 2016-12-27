@@ -136,6 +136,14 @@
 		where id = #{id}
 	</select>
 
+	<!-- 导出 -->
+  	<select id="select2Excel" resultType="java.util.Map" parameterType="java.util.Map">
+		select (select name from sys_dictionary where pid = 1 and value = sex) sexName,
+			<include refid="Base_Column_List" />
+		from sys_user
+		<include refid="Page_Where_Clause"/>
+	</select>
+
 	<!-- 分页查询所有(条件查询也能使用这个,不过为了解决翻译列表时的麻烦) -->
 	<select id="selectAll4Page" resultMap="BaseResultMap" parameterType="java.util.Map">
 		select (select name from sys_dictionary where pid = 1 and value = sex) sexName,
@@ -156,6 +164,19 @@
 	<insert id="insert" parameterType="com.shupro.oa.admin.model.SysUser" >
 	  	insert into sys_user(id,name,loginName,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid)
 		 values(#{id},#{name},#{loginName},#{pwd},#{sex},#{icon},#{phoneNum},#{phoneNum2},#{address},#{state},#{deptid},#{createtime},#{leavetime},#{userType},#{sotid})
+	</insert>
+   
+	<!-- 批量插入记录 -->
+	<insert id="insertBatch" parameterType="java.util.List" >
+	  	insert into sys_user(id,name,loginName,pwd,sex,icon,phoneNum,phoneNum2,address,state,deptid,createtime,leavetime,userType,sotid)
+		 values
+		 <foreach collection ="list" item="objItme" index= "index" separator =",">
+		 	(
+		 	#{objItme.id},#{objItme.name},#{objItme.loginName},#{objItme.pwd},#{objItme.sex},#{objItme.icon},#{objItme.phoneNum},
+		 	#{objItme.phoneNum2},#{objItme.address},#{objItme.state},#{objItme.deptid},#{objItme.createtime},#{objItme.leavetime},
+		 	#{objItme.userType},#{objItme.sotid}
+		 	)
+		 </foreach>
 	</insert>
 
 	<!-- 根据id，修改state(逻辑删除)-->  

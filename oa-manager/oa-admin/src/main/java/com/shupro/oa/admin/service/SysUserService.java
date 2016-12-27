@@ -3,6 +3,8 @@ package com.shupro.oa.admin.service;
 import com.shupro.oa.admin.model.SysUser;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import com.shupro.core.common.BaseService;
 
@@ -30,6 +32,13 @@ public interface SysUserService extends BaseService<SysUser> {
 	 */
 	SysUser login(String loginName, String password);
 
+	/**
+	 * 导出查询
+	 * @param map
+	 * @return
+	 */
+	List<Map<String, Object>> select2Excel(Map<String, Object> map);
+
 //	/**
 //	 * 重置或修改密码(底层实际还是updateSelective)
 //	 * @param ids
@@ -37,5 +46,12 @@ public interface SysUserService extends BaseService<SysUser> {
 //	 * @return
 //	 */
 //	int resetPwd(SysUser sysUser);
+	
+	/**
+	 * 批量新增
+	 * @param record
+	 * @return
+	 */
+	int insertBatch(List<SysUser> list);
 	
 }

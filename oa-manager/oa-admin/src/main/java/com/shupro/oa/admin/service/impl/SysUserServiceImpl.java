@@ -70,6 +70,12 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 		}
 	}
 
+	@Override
+	public List<Map<String, Object>> select2Excel(Map<String, Object> map) {
+		
+		return sysUserMapper.select2Excel(map);
+	}
+
 //	@Override
 //	public int resetPwd(SysUser sysUser) {
 //		
@@ -84,4 +90,11 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 //		return sysUserMapper.updateSelective(sysUser);
 //	}
 
+	@Override
+	@Transactional
+	public int insertBatch(List<SysUser> list) {
+		
+		return sysUserMapper.insertBatch(list);
+	}
+	
 }
