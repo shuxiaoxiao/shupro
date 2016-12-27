@@ -15,8 +15,8 @@
 		<table cellpadding="5">
     		<tr>
     			<td>file:</td>
-    			<td><input class="easyui-filebox" id="file" name="file" data-options="buttonText:'选择文件' " />
-    				<!-- data-options="required:true, missingMessage:'不能为空', validType:'length[2,5]', invalidMessage:'请输入2到5个字符！' " /> -->
+    			<td>
+    				<input class="easyui-filebox" id="file" name="file" data-options="required:true, buttonText:'选择文件' " />
     			</td>
     		</tr>
     		<tr>
@@ -34,12 +34,12 @@
 			$('#formSubmit').click(function(){
 				/* 表单提交方式(保存)*/
 				$form.form('submit',{
-			        url: '${path}/sysUser/upload',
+			        url: '${path}/file/upload',
 			        success: function(result){
 			        	//var data = JSON.parse(result);//Json对象
 			        	var data = $.parseJSON(result);//jq对象
 			        	console.log(data);
-			        	
+			        	$.messager.alert('提示',data.message);
 			        	//成功后的操作,此处需要将result先转换一次
 			        }
 				}); 

@@ -13,8 +13,10 @@
 		<div data-options="region:'north',split:true " style="height:40px;padding: 3px;">
 			<!--部门编号：<input type="text" id="query_deptid" />&nbsp;
 			-->
-			登录名：<input type="text" id="query_loginName" />&nbsp;
+		<form id="queryForm" method="post">
+			登录名：<input type="text" id="query_loginName" name="loginName" />&nbsp;
 			<a class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search' " onclick="searchData();">查询</a>
+		</form>
 		</div>
 		<div data-options="region:'center' ">
 			<table id="sysUserGrid"></table>
@@ -22,7 +24,7 @@
 		
 		<!-- 表单(放在layout里面，放在外面会影响grid的高度) -->
 		<div id="dlg" class="easyui-dialog" style="width:450px;height:360px;" 
-			data-options="closed:true, modal:true, left:100, top:50, buttons:'#dlg-buttons' ">
+			data-options="closed:true, modal:true, buttons:'#dlg-buttons' ">
 	    	<form id="fm" method="post">
 	    		<input id="id" name="id" type="hidden">
 	    		<table class="form-table">
@@ -77,7 +79,8 @@
 		    		<tr>
 		    			<td class="form-td-left"> 用户状态:</td>
 		    			<td>
-			    			<select class="easyui-combobox  form-input" id="state" name="state">
+			    			<select class="easyui-combobox  form-input" id="state" name="state"
+			    				data-options="missingMessage:'请选择用户状态', required:true, editable:false ">
 								<option value="0">不可用</option>
 								<option value="1">可用</option>
 							</select>
@@ -116,10 +119,40 @@
 		    	</table>
 	        </form>
 	        <div id="dlg-buttons">
-		        <a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-ok" onclick="save()" style="width:90px">保存</a>
-		        <a href="javascript:void(0);" class="easyui-linkbutton" iconCls="icon-cancel" onclick="$('#dlg').dialog('close');" style="width:90px">取消</a>
+		        <a href="javascript:void(0);" class="easyui-linkbutton btn" iconCls="icon-ok" onclick="save()" >保存</a>
+		        <a href="javascript:void(0);" class="easyui-linkbutton btn" iconCls="icon-cancel" onclick="$('#dlg').dialog('close');" >取消</a>
 		    </div>
 	    </div>
+	    
+	    <!-- 导入 -->
+	    <div id="importDialog" class="easyui-dialog" style="width:450px;height:150px;"
+			data-options="closed:true, modal:true, iconCls:'icon-save',title:'导入', buttons:'#importDialog-buttons'  ">
+	   		<form id="importForm" method="post" enctype="multipart/form-data">
+	   		<%-- 
+	   		<input id="path" name="path" type="hidden" value=""> --%>
+			<table>
+				<tr>
+	    			<td colspan="2">&nbsp;</td>
+	    		</tr>
+	    		<tr>
+	    			<td class="form-td-left"> file:</td>
+	    			<td>
+	    				<!-- name 不受限制 -->
+	    				<input class="easyui-filebox form-input" id="file" name="file" data-options="required:true, buttonText:'选择文件' " />
+	    			</td>
+	    		</tr>
+	    		<tr>
+	    			<td colspan="2">&nbsp;</td>
+	    		</tr>
+	    	</table>
+			</form>
+	   		<div id="importDialog-buttons">
+	   			<a href="javascript:void(0);" id="downloadBtn" class="easyui-linkbutton btn" data-options="iconCls:'icon-ok' ">下载模板</a>&nbsp;
+	   			<a href="javascript:void(0);" id="importBtn" class="easyui-linkbutton btn" data-options="iconCls:'icon-ok' ">提交</a>&nbsp;
+		    	<a href="javascript:void(0);" class="easyui-linkbutton btn" data-options="iconCls:'icon-cancel' " onclick="$('#importDialog').dialog('close');" >取消</a>
+		    </div>
+	   	</div>
+	   	
 	</div>
 	
 <script type="text/javascript">
@@ -161,7 +194,7 @@
 				{field:'phoneNum',title:'手机号'},    
 				{field:'phoneNum2',title:'备用号'},    
 				{field:'address',title:'地址'},    
-				{field:'state',title:'用户状态',
+				/* {field:'state',title:'用户状态',
 					formatter: function(val,row){
 						if (val == '0'){
 							return '不可用';
@@ -169,7 +202,7 @@
 							return '可用';
 						}
 					}
-				},    
+				},     */
 				{field:'deptid',title:'部门id'},    
 				{field:'createtime',title:'入职时间'},    
 				{field:'leavetime',title:'离职时间'},    
@@ -204,19 +237,19 @@
 		    	text:'导入' ,
 				iconCls:'icon-excel' , 
 				handler:function(){
-		    		resetPwd();
+		    		importUser();
 				}
 		     },{
 		    	text:'导出' ,
 				iconCls:'icon-excel' , 
 				handler:function(){
-		    		resetPwd();
+		    		exportUser();
 				}
 		     },{
 		    	text:'导出设置' ,
 				iconCls:'icon-excel' , 
 				handler:function(){
-		    		resetPwd();
+					exportSettings();
 				}
 		    }]
 		});
@@ -244,6 +277,49 @@
 				//生效,但是是展开所有
 				//treeObj.tree('expandAll');
 			}
+		});
+		
+		//导入
+		$('#importBtn').click(function(){
+			$('#importForm').form('submit',{
+		        url: '${path}/sysUser/importUser',
+		        success: function(result){
+		        	//var data = JSON.parse(result);//Json对象
+		        	var data = $.parseJSON(result);//jq对象
+		        	//console.log(data);
+		        	$.messager.alert('提示',data.message);
+		        }
+			}); 
+		});
+		
+		/* 上传示例
+		$('#importBtn').click(function(){
+			$('#importForm').form('submit',{
+		        url: '${path}/file/upload',
+		        success: function(result){
+		        	//var data = JSON.parse(result);//Json对象
+		        	var data = $.parseJSON(result);//jq对象
+		        	//console.log(data);
+		        	$.messager.alert('提示',data.message);
+		        }
+			}); 
+		});
+		*/
+		
+		//下载模板
+		$('#downloadBtn').click(function(){
+			$('#importForm').form('submit',{
+		        url: '${path}/file/download',
+		        onSubmit: function(param){
+		       		param.path = 'download/admin/user2import.xls';
+		        },
+		        success: function(result){
+		        	//var data = JSON.parse(result);//Json对象
+		        	var data = $.parseJSON(result);//jq对象
+		        	//console.log(data);
+		        	$.messager.alert('提示',data.message);
+		        }
+			}); 
 		});
 		
 	});
@@ -401,6 +477,31 @@
 	        	}
 	        });
 		}
+	}
+	
+	/** 导入 */
+	function importUser(){
+		//清空表单
+		$('#importForm').form('clear');
+		//如果上面的表单清空不好用,则换成jq的表单清空
+		//$('#fm').get(0).reset();
+		
+		//显示
+		$('#importDialog').dialog('open');
+		
+	}
+	
+	
+	/** 导出 */
+	function exportUser(){
+		$("#queryForm").attr("action","${path}/sysUser/export");
+		$('#queryForm').submit();
+		
+	}
+	
+	/** 导出设置 */
+	function exportSettings(){
+		
 	}
 	
 </script>
