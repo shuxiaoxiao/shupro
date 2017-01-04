@@ -370,47 +370,23 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<!-- 配置文件（暂时未成功）  -->
-	<profiles>
-		<profile>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<id>development</id>
-			<properties>
-				<package.environment>development</package.environment>
-			</properties>
-		</profile>
-		<profile>
-			<id>test</id>
-			<properties>
-				<package.environment>test</package.environment>
-			</properties>
-		</profile>
-		<profile>
-			<id>product</id>
-			<properties>
-				<package.environment>product</package.environment>
-			</properties>
-		</profile>
-	</profiles>
-
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!-- 添加tomcat插件，不用在本地安装tomcat了 -->
+				<!-- 添加tomcat插件，不用在本地安装tomcat了, 由于不同项目要的不同最好单独定义
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>tomcat-maven-plugin</artifactId>
 					<version>1.1</version>
 					<configuration>
-						<path>/</path><!-- 项目名 -->
+						<path>/</path>
 						<port>80</port>
 						<uriEncoding>UTF-8</uriEncoding>
 						<url>http://localhost:80/manager/html</url>
 						<server>tomcat7</server>
 					</configuration>
 				</plugin>
+				 -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -427,20 +403,6 @@
 			</plugins>
 		</pluginManagement>
 
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<!-- profile配置对应的配置文件路径 <resource> <directory>src/environment/${package.environment}</directory> 
-				</resource> -->
-		</resources>
 	</build>
 
 </project>
